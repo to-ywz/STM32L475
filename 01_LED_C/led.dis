@@ -1,0 +1,181 @@
+
+========================================================================
+
+** ELF Header Information
+
+    File Name: Objects\reg_operation.axf
+
+    Machine class: ELFCLASS32 (32-bit)
+    Data encoding: ELFDATA2LSB (Little endian)
+    Header version: EV_CURRENT (Current version)
+    Operating System ABI: none
+    ABI Version: 0
+    File Type: ET_EXEC (Executable) (2)
+    Machine: EM_ARM (ARM)
+
+    Image Entry point: Not specified
+    Flags: EF_ARM_ABI_FLOAT_HARD (0x05000400)
+
+    ARM ELF revision: 5 (ABI version 2)
+
+    Conforms to Hard float procedure-call standard
+
+    Built with
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+    Header size: 52 bytes (0x34)
+    Program header entry size: 32 bytes (0x20)
+    Section header entry size: 40 bytes (0x28)
+
+    Program header entries: 1
+    Section header entries: 14
+
+    Program header offset: 8796 (0x0000225c)
+    Section header offset: 8828 (0x0000227c)
+
+    Section header string table index: 13
+
+========================================================================
+
+** Program header #0 (PT_LOAD) [PF_X + PF_R]
+    Size : 136 bytes
+    Virtual address: 0x08000000 (Alignment 4)
+
+
+========================================================================
+
+** Section #1 'ER_IROM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_EXECINSTR]
+    Size   : 136 bytes (alignment 4)
+    Address: 0x08000000
+
+    $d.realdata
+    RESET
+    __Vectors
+        0x08000000:    00000000    ....    DCD    0
+        0x08000004:    08000009    ....    DCD    134217737
+    $t
+    .text
+    $v0
+    Reset_Handler
+        0x08000008:    f8dfd004    ....    LDR      sp,[pc,#4] ; [0x8000010] = 0x20018000
+        0x0800000c:    f000f808    ....    BL       mymain ; 0x8000020
+    $d
+        0x08000010:    20018000    ...     DCD    536969216
+    $t
+    i.Delay
+    Delay
+        0x08000014:    bf00        ..      NOP      
+        0x08000016:    1e01        ..      SUBS     r1,r0,#0
+        0x08000018:    f1a00001    ....    SUB      r0,r0,#1
+        0x0800001c:    d1fb        ..      BNE      0x8000016 ; Delay + 2
+        0x0800001e:    4770        pG      BX       lr
+    i.mymain
+    mymain
+        0x08000020:    f8df8058    ..X.    LDR      r8,[pc,#88]     ;定义并获取 RCC_AHB2_ENR           [0x800007c] = 0x4002104c
+        0x08000024:    4c16        .L      LDR      r4,[pc,#88]     ;定义并获取 GPIOE_MODER            [0x8000080] = 0x48001000
+        0x08000026:    1d25        %.      ADDS     r5,r4,#4 ;       定义并获取 GPIO_OTYPER                       
+        0x08000028:    1d2e        ..      ADDS     r6,r5,#4 ;       定义并获取 GPIO_OSPEEDR                       
+        0x0800002a:    1d37        7.      ADDS     r7,r6,#4 ;       定义并获取 GPIO_PUPDR                       
+        0x0800002c:    4b14        .K      LDR      r3,[pc,#80]     ;读取 GPIO_BASE 值到 r3                       [0x8000080] = 0x48001000
+        0x0800002e:    3314        .3      ADDS     r3,r3,#0x14     ;r3 偏移 0x14 到 ODR 寄存器
+        
+
+        0x08000030:    f8d80000    ....    LDR      r0,[r8,#0]      ;读取 r8 值 到 r0
+        0x08000034:    f0400010    @...    ORR      r0,r0,#0x10     ; r0 = r0 | 0x10 =>         *RCC_AHB2_ENR |= (1 << 4)
+        0x08000038:    f8c80000    ....    STR      r0,[r8,#0]      ;将 r0 的值传输到 r8 
+        
+        0x0800003c:    6820         h      LDR      r0,[r4,#0]      ;读取 r4 值 到 r0
+        0x0800003e:    f4002080    ...     AND      r0,r0,#0x40000  ; r0 = r0 & (0x40000) =>    *GPIOE_MODER &= (0x01 << (9 * 2));
+        0x08000042:    6020         `      STR      r0,[r4,#0]      ;将 r0 的值传输到 r4 
+
+        0x08000044:    6828        (h      LDR      r0,[r5,#0]      ;读取 r5 值 到 r0
+        0x08000046:    f4207000     ..p    BIC      r0,r0,#0x200    ; r0 = r0 & (0x200)   =>    *GPIO_OTYPER &= ~(0x01 << 9);
+        0x0800004a:    6028        (`      STR      r0,[r5,#0]      ;将 r0 的值传输到 r5 
+
+        0x0800004c:    6830        0h      LDR      r0,[r6,#0]      ;读取 r6 值 到 r0
+        0x0800004e:    f4402040    @.@     ORR      r0,r0,#0xc0000  ; r0 = r0 | (0xc0000) =>    *GPIO_OSPEEDR |= (0x03 << (9 * 2));
+        0x08000052:    6030        0`      STR      r0,[r6,#0]      ;将 r0 的值传输到 r6
+
+        0x08000054:    6838        8h      LDR      r0,[r7,#0]      ;读取 r7 值 到 r0
+        0x08000056:    f4402080    @..     ORR      r0,r0,#0x40000  ; r0 = r0 | (0xc0000) =>    *GPIO_PUPDR |= (0x01 << (9 * 2));
+        0x0800005a:    6038        8`      STR      r0,[r7,#0]      ;将 r0 的值传输到 r7
+
+
+        ; while (1)
+        0x0800005c:    e00d        ..      B        0x800007a ;     ;                               mymain + 90
+        ;{
+        
+        0x0800005e:    6818        .h      LDR      r0,[r3,#0]      ;
+        0x08000060:    f4207000     ..p    BIC      r0,r0,#0x200    ;       *GPIO_ODR &= ~(1 << 9);
+        0x08000064:    6018        .`      STR      r0,[r3,#0]      ;
+
+
+        0x08000066:    4807        .H      LDR      r0,[pc,#28]     ;                                   [0x8000084] = 0x186a0
+        0x08000068:    f7ffffd4    ....    BL       Delay ;                                         0x8000014
+        0x0800006c:    6818        .h      LDR      r0,[r3,#0]      ;
+        0x0800006e:    f4407000    @..p    ORR      r0,r0,#0x200    ;
+        0x08000072:    6018        .`      STR      r0,[r3,#0]      ;
+        0x08000074:    4803        .H      LDR      r0,[pc,#12]     ;                                   [0x8000084] = 0x186a0
+        0x08000076:    f7ffffcd    ....    BL       Delay           ;                                         0x8000014
+        
+        ;}
+        0x0800007a:    e7f0        ..      B        0x800005e ;                                     mymain + 62
+    
+
+        ;宏
+    $d
+        0x0800007c:    4002104c    L..@    DCD    1073877068            ;RCC_AHB2_ENR
+        0x08000080:    48001000    ...H    DCD    1207963648            ;GPIOE_BASE
+        0x08000084:    000186a0    ....    DCD    100000                ;Delay
+
+** Section #2 '.debug_abbrev' (SHT_PROGBITS)
+    Size   : 1476 bytes
+
+
+** Section #3 '.debug_frame' (SHT_PROGBITS)
+    Size   : 352 bytes
+
+
+** Section #4 '.debug_info' (SHT_PROGBITS)
+    Size   : 1892 bytes
+
+
+** Section #5 '.debug_line' (SHT_PROGBITS)
+    Size   : 464 bytes
+
+
+** Section #6 '.debug_loc' (SHT_PROGBITS)
+    Size   : 156 bytes
+
+
+** Section #7 '.debug_macinfo' (SHT_PROGBITS)
+    Size   : 2260 bytes
+
+
+** Section #8 '.debug_pubnames' (SHT_PROGBITS)
+    Size   : 57 bytes
+
+
+** Section #9 '.symtab' (SHT_SYMTAB)
+    Size   : 288 bytes (alignment 4)
+    String table #10 '.strtab'
+    Last local symbol no. 12
+
+
+** Section #10 '.strtab' (SHT_STRTAB)
+    Size   : 292 bytes
+
+
+** Section #11 '.note' (SHT_NOTE)
+    Size   : 20 bytes (alignment 4)
+
+
+** Section #12 '.comment' (SHT_PROGBITS)
+    Size   : 1192 bytes
+
+
+** Section #13 '.shstrtab' (SHT_STRTAB)
+    Size   : 156 bytes
+
+
