@@ -1,0 +1,111 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; file:         startup.s
+    2 00000000         ; author:       秦殇 (ywz_123xxx@163.com)
+    3 00000000         ; brief:        stm32L475 asm startup file
+    4 00000000         ; version:      0.1
+    5 00000000         ; date:         2020-11-14
+    6 00000000         ; copyright:    Copyright (c) 2020
+    7 00000000         
+    8 00000000                 PRESERVE8
+    9 00000000                 THUMB
+   10 00000000         
+   11 00000000         ; 异常向量表, 必须放在 ROM 上, 
+   12 00000000         ; Vector Table Mapped to Address 0 at Reset
+   13 00000000                 AREA             RESET, DATA, READONLY
+   14 00000000                 EXPORT           __Vectors
+   15 00000000         ;; CPU上电之后 强制跳转到此处执行函数
+   16 00000000 00000000 
+                       __Vectors
+                               DCD              0
+   17 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   18 00000008         
+   19 00000008                 AREA             |.text|, CODE, READONLY
+   20 00000000         
+   21 00000000         ; Reset handler
+   22 00000000         Reset_Handler
+                               PROC
+   23 00000000                 EXPORT           Reset_Handler             [WEAK
+]
+   24 00000000                 IMPORT           main
+   25 00000000         
+   26 00000000 F8DF D004       LDR              sp, = (0x20000000+0x18000)
+   27 00000004 F7FF FFFE       BL               main
+   28 00000008                 ENDP
+   29 00000008         
+   30 00000008         
+   31 00000008                 END
+              20018000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\startup.d -o.\objects\startup.o -I.\RTE\_Target_1 
+-ID:\Keil5\Package\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\I
+nclude -ID:\Keil5\keil5forstm32\ARM\CMSIS\Include --predefine="__UVISION_VERSIO
+N SETA 529" --predefine="STM32L475xx SETA 1" --list=.\listings\startup.lst star
+tup.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 13 in file startup.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 16 in file startup.s
+   Uses
+      At line 14 in file startup.s
+Comment: __Vectors used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 19 in file startup.s
+   Uses
+      None
+Comment: .text unused
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 22 in file startup.s
+   Uses
+      At line 17 in file startup.s
+      At line 23 in file startup.s
+
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 24 in file startup.s
+   Uses
+      At line 27 in file startup.s
+Comment: main used once
+1 symbol
+340 symbols in table

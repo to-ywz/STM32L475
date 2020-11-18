@@ -1,0 +1,6 @@
+Dependencies for Project 'reg_operation', Target 'Target 1': (DO NOT MODIFY !)
+CompilerVersion: 5060750::V5.06 update 6 (build 750)::ARMCC
+F (.\User\main.c)(0x5FB4EA16)(--c99 --gnu -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections-I.\RTE\_Target_1-ID:\Keil5\Package\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-ID:\Keil5\keil5forstm32\ARM\CMSIS\Include-D__UVISION_VERSION="529" -DSTM32L475xx-o .\objects\main.o --omf_browse .\objects\main.crf --depend .\objects\main.d)
+I (D:\Keil5\keil5forstm32\ARM\ARMCC\include\stdint.h)(0x5D9AD218)
+I (User\../BSP/bsp_gpio.h)(0x5FB4E8F1)
+F (.\startup.s)(0x5FB489E9)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I.\RTE\_Target_1-ID:\Keil5\Package\Keil\STM32L4xx_DFP\2.4.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-ID:\Keil5\keil5forstm32\ARM\CMSIS\Include--pd "__UVISION_VERSION SETA 529" --pd "STM32L475xx SETA 1"--list .\listings\startup.lst --xref -o .\objects\startup.o --depend .\objects\startup.d)
